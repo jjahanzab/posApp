@@ -1,0 +1,31 @@
+
+SQLite Doc
+-----------------------------------
+https://www.sqlitetutorial.net/
+
+
+SQLite Database Tables
+-----------------------------------
+1. users_tbl
+=> id, name, email unique, password, online_user, role
+
+2. menus_tbl
+=> id, name, orders
+
+3. submenus_tbl
+=> id, menu_id, name, description, price, orders
+
+4. groups_tbl
+=> id, name, orders, min_quantity, max_quantity, special_group
+
+5. addons_tbl
+=> id, group_id, name, price, orders
+
+6. submenu_addons_tbl
+=> id, menu_id, submenu_id, group_id, addson_id, group_order
+
+7. menu_submenu_timings_tbl
+=> id, menu_id, submenu_id, day, day_status, day_detail, delivery_status, delivery_detail, collection_status, collection_detail, pos_status, schedule_detail
+
+8. menu_submenu_timingslots_tbl
+=> id, menu_id, submenu_id, day, delivery_start, delivery_end, collection_start, collection_end, pos_status
