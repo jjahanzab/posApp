@@ -19,14 +19,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.posApp.posApp"
+      "bundleIdentifier": "com.mjahanzabsabir.posApp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.posApp.posApp"
+      "package": "com.mjahanzabsabir.posApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
