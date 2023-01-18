@@ -327,7 +327,7 @@ function Submenu(props) {
                                 : ''
                               }
                             </View>
-                            {
+                            {/* {
                               // uncomment this for specal group //
                               group.special_group == "A" ? 
                                 <>
@@ -341,7 +341,7 @@ function Submenu(props) {
                                         // value={specialGroupText} 
                                       />
                                     </View>
-                                    {/* //<View style={AddonStyle.col_2}>
+                                    //<View style={AddonStyle.col_2}>
                                     //  {
                                     //    group.special_group_value ? 
                                     //    <Pressable style={AddonStyle.SpecialGroupBtnActive} onPress={() => { handleSpecialGroup(group.id) }}>
@@ -352,11 +352,11 @@ function Submenu(props) {
                                     //      <Text style={AddonStyle.AddonBtnText}>{'Save'}</Text>
                                     //    </Pressable>
                                     //  }
-                                    </View> */}
+                                    </View>
                                   </View>
                                 </>
                               : ""
-                            }
+                            } */}
                           </View>
                         )
                       })
