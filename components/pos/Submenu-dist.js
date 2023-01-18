@@ -85,42 +85,27 @@ function Submenu(props) {
     setLoader(false);
   }
 
-  // const handleSpecialGroup = (group_id) => {
-  //   setLoader(true);
+  const handleSpecialGroup = (group_id) => {
+    setLoader(true);
 
-  //   if (specialGroupText && specialGroupText.trim().length > 0) {
-  //     // console.log(specialGroupText);
-  //     let alterData = lists;
-  //     alterData.map((group) => {
-  //       if (group.id == group_id) {
-  //         group["special_group_value"] = specialGroupText;
-  //       }
-  //       return group;
-  //     })
-  //     // console.log(JSON.stringify(alterData));
-  //     setLists(alterData);
-  //     setHelper(+new Date());
-  //     // setSpecialGroupText('');
-  //   }
+    if (specialGroupText && specialGroupText.trim().length > 0) {
+      // console.log(specialGroupText);
 
-  //   setLoader(false);
-  // }
-
-  const handleChangeSpecialGroup = (group_id, text) => {
-    let alterData = lists;
-    alterData.map((group) => {
-      if (group.id == group_id) {
-        if (text && text.trim().length > 0) {
-          group["special_group_value"] = text;
-        } else if (text.trim().length == 0) {
-          delete group.special_group_value;
+      let alterData = lists;
+      alterData.map((group) => {
+        if (group.id == group_id) {
+          group["special_group_value"] = specialGroupText;
         }
-      }
-      return group;
-    })
-    // console.log(JSON.stringify(alterData));
-    setLists(alterData);
-    setHelper(+new Date());
+        return group;
+      })
+
+      // console.log(JSON.stringify(alterData));
+      setLists(alterData);
+      setHelper(+new Date());
+      // setSpecialGroupText('');
+    }
+
+    setLoader(false);
   }
   
   const addSubmenuGroupAddonCart = () => {
@@ -181,10 +166,10 @@ function Submenu(props) {
           updateLists.push(group);
         } else {
           // uncomment this for specal group //
-          if (group.special_group == 'A' && group.special_group_value !== '') {
-            delete group.addons;
-            updateLists.push(group);
-          }
+          // if (group.special_group == 'A' && group.special_group_value !== '') {
+          //   delete group.addons;
+          //   updateLists.push(group);
+          // }
         }
       });
       // console.log(JSON.stringify(updateLists));
@@ -210,7 +195,7 @@ function Submenu(props) {
     let storeValue = [];
     storeValue.push(submenu);
     let storeFirstValue = JSON.stringify(storeValue);
-    // console.log(storeFirstValue);
+    console.log(storeFirstValue);
 
     try {
       const basketItems = await AsyncStorage.getItem('basket');
@@ -327,36 +312,33 @@ function Submenu(props) {
                                 : ''
                               }
                             </View>
-                            {
+                            {/* {
                               // uncomment this for specal group //
                               group.special_group == "A" ? 
                                 <>
                                   <Text variant="titleMedium">{'Special Group Value:'}</Text>
                                   <View style={AddonStyle.row}>
-                                    <View style={AddonStyle.col_12}>
-                                      <TextInput 
-                                        onChangeText={text => handleChangeSpecialGroup(group.id, text)} 
-                                        // onChangeText={setSpecialGroupText} 
-                                        style={AddonStyle.SpecialGroupInput} 
-                                        // value={specialGroupText} 
+                                    <View style={AddonStyle.col_10}>
+                                      <TextInput onChangeText={setSpecialGroupText} style={AddonStyle.SpecialGroupInput}
+                                        // value={specialGroupText}
                                       />
                                     </View>
-                                    {/* //<View style={AddonStyle.col_2}>
-                                    //  {
-                                    //    group.special_group_value ? 
-                                    //    <Pressable style={AddonStyle.SpecialGroupBtnActive} onPress={() => { handleSpecialGroup(group.id) }}>
-                                    //      <Text style={AddonStyle.AddonBtnTextActive}>{'Save'}</Text>
-                                    //    </Pressable>
-                                    //    : 
-                                    //    <Pressable style={AddonStyle.SpecialGroupBtn} onPress={() => { handleSpecialGroup(group.id) }}>
-                                    //      <Text style={AddonStyle.AddonBtnText}>{'Save'}</Text>
-                                    //    </Pressable>
-                                    //  }
-                                    </View> */}
+                                    <View style={AddonStyle.col_2}>
+                                      {
+                                        group.special_group_value ? 
+                                        <Pressable style={AddonStyle.SpecialGroupBtnActive} onPress={() => { handleSpecialGroup(group.id) }}>
+                                          <Text style={AddonStyle.AddonBtnTextActive}>{'Save'}</Text>
+                                        </Pressable>
+                                        : 
+                                        <Pressable style={AddonStyle.SpecialGroupBtn} onPress={() => { handleSpecialGroup(group.id) }}>
+                                          <Text style={AddonStyle.AddonBtnText}>{'Save'}</Text>
+                                        </Pressable>
+                                      }
+                                    </View>
                                   </View>
                                 </>
                               : ""
-                            }
+                            } */}
                           </View>
                         )
                       })

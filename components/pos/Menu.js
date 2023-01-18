@@ -26,25 +26,37 @@ function Menu(props) {
     if (deliveryType == "T") {
       if (menu.timingslots && menu.timingslots.collection_status == "A") {
       } else {
-        return (
-          <Pressable key={index} style={[MenuStyle.col_2, MenuStyle.menusBox]}
-            onPress={() => handleMenuData(menu)}
-          >
-            <Text style={MenuStyle.menuText}>{ menu.id }-{ menu.name } </Text>
-          </Pressable>
+        return(
+          loadMenuView(menu, index)
         )
       }
     } else if (deliveryType == "D") {
       if (menu.timingslots && menu.timingslots.delivery_status == "A") {
       } else {
-        return (
-          <Pressable key={index} style={[MenuStyle.col_2, MenuStyle.menusBox]}
-            onPress={() => handleMenuData(menu)}
-          >
-            <Text style={MenuStyle.menuText}>{ menu.id }-{ menu.name } </Text>
-          </Pressable>
+        return(
+          loadMenuView(menu, index)
         )
       }
+    }
+  }
+  
+  const loadMenuView = (menu, index) => {
+    if (menuId == menu.id) {
+      return (
+        <Pressable key={index} style={[MenuStyle.col_2, MenuStyle.menusBox, MenuStyle.menusBoxActive]}
+          onPress={() => handleMenuData(menu)}
+        >
+          <Text style={MenuStyle.menuText}>{ menu.id }-{ menu.name } </Text>
+        </Pressable>
+      )
+    } else {
+      return (
+        <Pressable key={index} style={[MenuStyle.col_2, MenuStyle.menusBox]}
+          onPress={() => handleMenuData(menu)}
+        >
+          <Text style={MenuStyle.menuText}>{ menu.id }-{ menu.name } </Text>
+        </Pressable>
+      )
     }
   }
 

@@ -1024,8 +1024,10 @@ export default function Install(props) {
       return (
         <>
           <View style={styles.container}>
-            <Avatar.Image size={100} source={require('../assets/wifi.png')} style={{ backgroundColor: '#ffffff' }} />
-            <Button title='Reload App' onPress={() => reloadApp()} buttonColor={"#444444"} style={{ marginTop: 30, marginBottom: 30 }} />
+            <Avatar.Image size={100} source={require('../assets/wifi.png')} style={{ backgroundColor:'#ffffff' }} />
+            <Text style={{ marginTop:20, marginBottom:20, fontSize:16, fontWeight:"700" }}>{'Connect to the internet'}</Text>
+            <Text style={{ marginBottom:20, fontSize:16, fontWeight:"700" }}>{'You are offline. Check your connection.'}</Text>
+            <Button title='Retry' onPress={() => reloadApp()} buttonColor={"#444444"} style={{ marginTop:30, marginBottom:30 }} />
           </View>
         </>
       );
@@ -1033,7 +1035,7 @@ export default function Install(props) {
       return (
         <>
           <View style={styles.container}>
-            <Button title='Install Dependencies' onPress={() => installDep()} buttonColor={"#2196F3"} style={{ marginTop: 50, marginBottom: 50 }} />
+            <Button title='Install Dependencies' onPress={() => installDep()} buttonColor={"#2196F3"} style={{ marginTop:50, marginBottom:50 }} />
             {/* <Text>Is Connected? {netInfo.isConnected?.toString()}</Text> */}
           </View>
         </>

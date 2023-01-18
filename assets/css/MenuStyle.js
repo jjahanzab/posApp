@@ -39,6 +39,10 @@ const MenuStyle = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  menusBoxActive: {
+    backgroundColor: '#cccccc',
+  },
+
   menuText: {
     fontSize: 9,
     fontWeight: '700',
