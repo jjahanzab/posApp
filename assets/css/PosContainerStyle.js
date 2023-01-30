@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-const PosLayoutStyle = StyleSheet.create({
+const PosContainerStyle = StyleSheet.create({
 
   row: {
     flexDirection: 'row',
@@ -24,4 +24,4 @@ const PosLayoutStyle = StyleSheet.create({
 
 });
 
-export default PosLayoutStyle;
+export default PosContainerStyle;

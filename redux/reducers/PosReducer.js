@@ -1,4 +1,5 @@
 import { 
+  GET_DB_SETTINGS,
   GET_DB_USERS,
   GET_DB_MENUS,
   GET_DB_SUBMENUS,
@@ -16,6 +17,7 @@ import {
 } from "../actions/PosAction";
 
 const storeData = {
+  dbSettings: [],
   dbUsers: [],
   dbMenus: [],
   dbSubmenus: [],
@@ -35,6 +37,9 @@ function PosReducer(state = storeData, action) {
   switch (action.type) {
 
     // get db tables data //
+    case GET_DB_SETTINGS:
+      return {...state, dbSettings: action.payload};
+      
     case GET_DB_USERS:
       return {...state, dbUsers: action.payload};
     

@@ -113,7 +113,7 @@ const BasketStyle = StyleSheet.create({
     backgroundColor: '#e60000'
   },
 
-  deliveryBtn: {
+  deliveryBtnActive: {
     backgroundColor: 'black',
     alignItems: 'center', 
     justifyContent: 'center',
@@ -121,13 +121,13 @@ const BasketStyle = StyleSheet.create({
     padding: 5,
     margin: 4,
   },
-  deliveryBtnInside: {
+  deliveryBtnInsideActive: {
     fontWeight: '700',
     fontSize: 8,
     color: 'white'
   },
-  deliveryBtnActive: {
-    // backgroundColor: 'black',
+  deliveryBtn: {
+    borderWidth: 1,
     borderColor: 'black',
     alignItems: 'center', 
     justifyContent: 'center',
@@ -135,7 +135,7 @@ const BasketStyle = StyleSheet.create({
     padding: 5,
     margin: 4,
   },
-  deliveryBtnInsideActive: {
+  deliveryBtnInside: {
     fontWeight: '700',
     fontSize: 8,
     color: 'black'

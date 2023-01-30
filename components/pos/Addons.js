@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Modal, Pressable, View, ScrollView } from "react-native";
 import { Checkbox, Button, Divider, Text } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PosContext } from '../../context/PosContext';
 
 import AddonStyle from "../../assets/css/AddonStyle";

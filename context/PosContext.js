@@ -21,28 +21,32 @@ const PosProvider = ({children}) => {
   const [ basketPrice, setBasketPrice ] = useState(0);
   const [ menuId, setMenuId ] = useState(0);
   const [ deliveryType, setDeliveryType ] = useState('T');
-
+  const [ payNow, setPayNow ] = useState(false);
+  const [ paymentType, setPaymentType ] = useState('');
+  
 
   // get first available menu id from menus // 
   useEffect(()=>{
     if (dbMenus.length > 0) {
-      
-      let firstObj = '';
-      dbMenus.forEach(element => {
-        if (firstObj == '') {
-          if (element.timings && element.timings.day_status == "I") {
-            if (element.timingslots && element.timingslots.collection_status == "I") {
-              firstObj = element;
+      if (menuId == 0) {
+        let firstObj = '';
+        dbMenus.forEach(element => {
+          if (firstObj == '') {
+            if (element.timings && element.timings.day_status == "I") {
+              if (element.timingslots && element.timingslots.collection_status == "I") {
+                firstObj = element;
+              }
             }
           }
+        });
+        if (Object.keys(firstObj).length !== 0) {
+          let firstMenuId = firstObj.id;
+          // console.log(firstMenuId);
+          dispatch(getDbSubmenusById(firstMenuId));
+          setMenuId(firstMenuId);
         }
-      });
-
-      if (Object.keys(firstObj).length !== 0) {
-        let firstMenuId = firstObj.id;
-        // console.log(firstMenuId);
-        dispatch(getDbSubmenusById(firstMenuId));
-        setMenuId(firstMenuId);
+      } else if (menuId > 0) {
+        dispatch(getDbSubmenusById(menuId));
       }
     }
   },[dbMenus]);
@@ -213,6 +217,12 @@ const PosProvider = ({children}) => {
   }
 
 
+  const changeSpecialCharFun = (str) => {
+    let newStr = str.includes("&#34;") ? str.replace('&#34;', '"') : str.includes("&#39;") ? str.replace('&#39;', "'") : str;
+    return newStr;
+  }
+
+
   return (
     <>
       <PosContext.Provider value={
@@ -225,7 +235,10 @@ const PosProvider = ({children}) => {
           basketPrice, setBasketPrice,
           menuId, setMenuId,
           deliveryType, setDeliveryType,
-          clearBasketFun
+          clearBasketFun,
+          changeSpecialCharFun,
+          payNow, setPayNow,
+          paymentType, setPaymentType
         }
       }>
         {children}

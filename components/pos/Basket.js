@@ -10,7 +10,7 @@ import { PosContext } from '../../context/PosContext';
 // import { AuthContext } from  '../context/AuthContext';
 // import { AppContext } from  '../context/AppContext';
 
-import { changeAuthStatus } from '../../redux/actions/PosAction';
+import { getDbMenus, getDbSubmenusById, changeAuthStatus } from '../../redux/actions/PosAction';
 
 function Basket(props) {
 
@@ -18,7 +18,8 @@ function Basket(props) {
 
   // const { putLogout } = useContext(AuthContext);
   // const { basketStatus, setBasketStatus, basketPrice, clearBasket } = useContext(AppContext);
-  const { posLoader, setPosLoader, basketStatus, setBasketStatus, clearBasketFun, basketPrice, deliveryType, setDeliveryType } = useContext(PosContext);
+  const { posLoader, setPosLoader, basketStatus, setBasketStatus, clearBasketFun, basketPrice, 
+          deliveryType, setDeliveryType, menuId, changeSpecialCharFun, payNow, setPayNow } = useContext(PosContext);
   const [ basketItems, setbasketItems ] = useState([]);
   const [ totalPrice, setTotalPrice ] = useState(0);
 
@@ -137,49 +138,71 @@ function Basket(props) {
     // dispatch(changeAuthStatus(false));
     // AsyncStorage.removeItem('auth');
 
-    // AsyncStorage.setItem('install', 'second');
-    // dispatch(changeInstallStatus('second'));
-    // console.log('set second value');
+    AsyncStorage.setItem('install', 'second');
+    dispatch(changeInstallStatus('second'));
+    console.log('set second value');
   }
 
-  const changeDeliveryType = async (type) => {
-    setPosLoader('true');
+  const changeDeliveryTypeFun = async (val) => {
+    // setPosLoader('true');
     
-    await sleep(1000);
-    setDeliveryType(type);
+    // await sleep(1000);
+    setDeliveryType(val);
     console.log('changing delivery type');
+    // console.log(menuId);
+    dispatch(getDbMenus());
+    dispatch(getDbSubmenusById(menuId));
 
-    setPosLoader('false');
+    // setPosLoader('false');
   }
+
+  const saveOrderFun = () => {
+    console.log('save order');
+  }
+
+  const payNowFun = () => {
+    console.log('pay now');
+    setPayNow(true);
+  }
+
+  const backToMenuFun = () => {
+    console.log('pay now');
+    setPayNow(false);
+  }
+
+  // const changeSpecialChar = (str) => {
+  //   let newStr = str.includes("&#34;") ? str.replace('&#34;', '"') : str.includes("&#39;") ? str.replace('&#39;', "'") : str;
+  //   return newStr;
+  // }
 
   return (
     <>
       <View style={[BasketStyle.col_5, BasketStyle.basketSection]}>
 
         {/* Delivery Types */}
-        {/* <View style={BasketStyle.row}>
+        <View style={BasketStyle.row}>
           <View style={BasketStyle.col_5}>
-            <TouchableOpacity onPress={()=>changeDeliveryType('T')}>
+            <TouchableOpacity onPress={()=>changeDeliveryTypeFun('T')}>
               { deliveryType == 'T' ?
-                  <View style={BasketStyle.deliveryBtn}>
-                    <Text style={BasketStyle.deliveryBtnInside}>{'Take Away'}</Text>
-                  </View>
-                :
                   <View style={BasketStyle.deliveryBtnActive}>
                     <Text style={BasketStyle.deliveryBtnInsideActive}>{'Take Away'}</Text>
+                  </View>
+                :
+                  <View style={BasketStyle.deliveryBtn}>
+                    <Text style={BasketStyle.deliveryBtnInside}>{'Take Away'}</Text>
                   </View>
               }
             </TouchableOpacity>
           </View>
           <View style={BasketStyle.col_5}>
-            <TouchableOpacity onPress={()=>changeDeliveryType('D')}>
+            <TouchableOpacity onPress={()=>changeDeliveryTypeFun('D')}>
               { deliveryType == 'D' ?
-                  <View style={BasketStyle.deliveryBtn}>
-                    <Text style={BasketStyle.deliveryBtnInside}>{'Delivery'}</Text>
-                  </View>
-                :
                   <View style={BasketStyle.deliveryBtnActive}>
                     <Text style={BasketStyle.deliveryBtnInsideActive}>{'Delivery'}</Text>
+                  </View>
+                :
+                  <View style={BasketStyle.deliveryBtn}>
+                    <Text style={BasketStyle.deliveryBtnInside}>{'Delivery'}</Text>
                   </View>
               }
             </TouchableOpacity>
@@ -187,7 +210,7 @@ function Basket(props) {
           <View style={BasketStyle.col_2}>
           <Text>{deliveryType}</Text>
           </View>
-        </View> */}
+        </View>
 
         <View style={BasketStyle.basketContainer}>
 
@@ -239,18 +262,20 @@ function Basket(props) {
 
                     </View>
                     <View style={[BasketStyle.col_7, BasketStyle.basketCell]}>
-                      <Text style={BasketStyle.basketTextName}>{item.name}</Text>
+                      <Text style={BasketStyle.basketTextName}>{changeSpecialCharFun(item.name)}-({item.price})</Text>
                       { 
                         item.groups && item.groups.length > 0 ? 
                           item.groups.map((group, index)=>{
                             return (
                               <View key={index}>
-                                <Text style={BasketStyle.basketTextName}>[{group.name}]</Text>
+                                <Text style={BasketStyle.basketTextName}>[{changeSpecialCharFun(group.name)}]</Text>
                                 { 
                                   group.addons && group.addons.length > 0 ? 
                                     group.addons.map((addon, index)=>{
                                       return (
-                                        <Text key={index} style={BasketStyle.basketTextName}>({addon.name}-{addon.price})</Text>
+                                        <Text key={index} style={BasketStyle.basketTextName}>(
+                                          {changeSpecialCharFun(addon.name)}-{addon.price}
+                                        )</Text>
                                       )
                                     })
                                   : ''
@@ -279,15 +304,42 @@ function Basket(props) {
 
         <View style={BasketStyle.row}>
 
+          {/* <View style={BasketStyle.col_4}>
+            <TouchableOpacity onPress={()=>saveOrderFun()}>
+              <View style={BasketStyle.clearBasketBtn}>
+                <Text style={BasketStyle.clearBasketBtnInside}>{'Save Order'}</Text>
+              </View>
+            </TouchableOpacity>
+          </View> */}
+
+          {
+            payNow == true ?
+              <View style={BasketStyle.col_4}>
+                <TouchableOpacity onPress={()=>backToMenuFun()}>
+                  <View style={BasketStyle.clearBasketBtn}>
+                    <Text style={BasketStyle.clearBasketBtnInside}>{'Back To Menu'}</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              :
+              <View style={BasketStyle.col_4}>
+                <TouchableOpacity onPress={()=>payNowFun()}>
+                  <View style={BasketStyle.clearBasketBtn}>
+                    <Text style={BasketStyle.clearBasketBtnInside}>{'Pay Now'}</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+          }
+
           <View style={BasketStyle.col_6}>
             <TouchableOpacity onPress={()=>clearBasketFun()}>
               <View style={BasketStyle.clearBasketBtn}>
-                <Text style={BasketStyle.clearBasketBtnInside}>{'Clear Basket'}</Text>
+                <Text style={BasketStyle.clearBasketBtnInside}>{'Clear Bsket'}</Text>
               </View>
             </TouchableOpacity>
           </View>
 
-          {/* <View style={BasketStyle.col_3}>
+          {/* <View style={BasketStyle.col_5}>
             <TouchableOpacity onPress={()=>putLogoutFun()}>
               <View style={BasketStyle.clearBasketBtn}>
                 <Text style={BasketStyle.clearBasketBtnInside}>{'Logout'}</Text>
@@ -295,7 +347,6 @@ function Basket(props) {
             </TouchableOpacity>
           </View> */}
           
-          <View style={BasketStyle.col_3}></View>
           
           {/* <View style={BasketStyle.col_3}>
             <TouchableOpacity onPress={()=>changeInstallStatus()}>
@@ -312,9 +363,13 @@ function Basket(props) {
         <View style={BasketStyle.row}>
           <View style={BasketStyle.col_12}>
             <Text style={BasketStyle.totalPrice}>{'Total Price: '}{basketPrice}</Text>
-            {/* <TextInput label="Sub Total:" value={basketPrice} mode="outlined" disabled={true} style={{height:40}} /> */}
+            <TextInput label="Sub Total:" value={basketPrice} mode="outlined" disabled={true} style={{height:40}} />
           </View>
         </View>
+
+        <Text style={BasketStyle.totalPrice}>
+          { props.authUser ? props.authUser.name : '' }
+        </Text>
 
       </View>
 

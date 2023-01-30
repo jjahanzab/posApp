@@ -1,0 +1,4 @@
+
+AsyncStorage Variables
+----------------------------
+install, tables-status, auth, auth-user, general-settings, basket

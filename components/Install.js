@@ -16,7 +16,7 @@ export default function Install(props) {
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   const [installLoader, setInstallLoader] = useState(false);
-  let tableStatusStorage =  { users:false, menus:false, submenus:false, groups: false, addons:false, submenu_addons:false, menu_submenu_timings:false, menu_submenu_timingslots:false };
+  let tableStatusStorage =  { settings:false, users:false, menus:false, submenus:false, groups: false, addons:false, submenu_addons:false, menu_submenu_timings:false, menu_submenu_timingslots:false };
 
   const dispatch = useDispatch();
   const { tables, user, users, players, install } = useSelector(state => state.UserReducer);
@@ -50,6 +50,192 @@ export default function Install(props) {
   },[])
 
 
+  const uploadSettings = () => {
+
+    return new Promise((resolve, reject) => {
+      try {
+
+        db.transaction(tx => {
+          tx.executeSql(`drop table if exists settings_tbl`, [])
+        },
+          (_, error) => { console.log("db error drop settings table") },
+          (_, success) => { console.log("db drop settings table") }
+        )
+        db.transaction(tx => {
+          tx.executeSql(`create table if not exists settings_tbl 
+            ( 
+              id integer primary key not null, 
+              shop_name text, 
+              contact text, 
+              shop_number text, 
+              return_url text, 
+              street text, 
+              city text, 
+              postcode text, 
+              latitude text, 
+              longitude text, 
+              radius text, 
+              test_number text, 
+              order_value_delivery text, 
+              order_value_collection text, 
+              service_charges_collection_cash text, 
+              service_charges_discount_collection_cash text, 
+              service_charges_collection_card text, 
+              service_charges_discount_collection_card text, 
+              service_charges_delivery_cash text, 
+              service_charges_discount_delivery_cash text, 
+              service_charges_delivery_card text, 
+              service_charges_discount_delivery_card text, 
+              delivery_method text, 
+              delivery_charges text, 
+              delivery_charges_default text, 
+              shop_website text, 
+              shop_description text, 
+              table_unreserve_message text, 
+              test_mode text, 
+              card_on_collection text, 
+              card_on_delivery text, 
+              cash_on_collection text, 
+              cash_on_delivery text, 
+              preorder_status text, 
+              status text, 
+              website_status text, 
+              deactive_message text, 
+              website_deactive_message text, 
+              customer_titles text, 
+              delivery_discount_type text, 
+              collection_discount_type text, 
+              delivery_discount text, 
+              collection_discount text, 
+              delivery_discount_threshold text, 
+              collection_discount_threshold text, 
+              sale_receipt text, 
+              sale_receipt_no text, 
+              kitchen_receipt text, 
+              kitchen_receipt_no text, 
+              sale_kitchen_receipt text, 
+              sale_kitchen_receipt_no text, 
+              block_unverifyaddress_googleapi text, 
+              auto_beep text, 
+              notify text, 
+              general_meta_tags text 
+            )
+          `);
+        },
+          (_, error) => { console.log("db error create settings table") },
+          (_, success) => { console.log("db create settings table") }
+        )
+
+        axios.get(`${baseUrl}/get-general-settings`).then((e_response) => {
+          if (e_response && e_response.data.statusCode == '200') {
+            let appSettings = e_response.data.generalSettings;
+
+            if (Object.keys(appSettings).length > 0) {
+              
+              var singleArr = Object.values(appSettings);
+
+              db.transaction( tx => {
+                  tx.executeSql(`insert into settings_tbl ( 
+                    id, 
+                    shop_name, 
+                    contact, 
+                    shop_number, 
+                    return_url, 
+                    street, 
+                    city, 
+                    postcode, 
+                    latitude, 
+                    longitude, 
+                    radius, 
+                    test_number, 
+                    order_value_delivery, 
+                    order_value_collection, 
+                    service_charges_collection_cash, 
+                    service_charges_discount_collection_cash, 
+                    service_charges_collection_card, 
+                    service_charges_discount_collection_card, 
+                    service_charges_delivery_cash, 
+                    service_charges_discount_delivery_cash, 
+                    service_charges_delivery_card, 
+                    service_charges_discount_delivery_card, 
+                    delivery_method, 
+                    delivery_charges, 
+                    delivery_charges_default, 
+                    shop_website, 
+                    shop_description, 
+                    table_unreserve_message, 
+                    test_mode, 
+                    card_on_collection, 
+                    card_on_delivery, 
+                    cash_on_collection, 
+                    cash_on_delivery, 
+                    preorder_status, 
+                    status, 
+                    website_status, 
+                    deactive_message, 
+                    website_deactive_message, 
+                    customer_titles, 
+                    delivery_discount_type, 
+                    collection_discount_type, 
+                    delivery_discount, 
+                    collection_discount, 
+                    delivery_discount_threshold, 
+                    collection_discount_threshold, 
+                    sale_receipt, 
+                    sale_receipt_no, 
+                    kitchen_receipt, 
+                    kitchen_receipt_no, 
+                    sale_kitchen_receipt, 
+                    sale_kitchen_receipt_no, 
+                    block_unverifyaddress_googleapi, 
+                    auto_beep, 
+                    notify, 
+                    general_meta_tags
+                  ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+                  singleArr );
+                },
+                (t, error) => { 
+                  reject(`db error insert settings table`);
+                  console.log("db error insert settings table"); 
+                },
+                (t, success) => { 
+                  console.log("db insert settings table "); 
+                  resolve('resolved axios request of settings');
+                }
+              )
+              
+            }
+          } else {
+            reject(`uploadSettings api data not found`);
+          }
+        }).catch((error) => {
+          reject(`insert settings api api error ${error}`);
+          console.log(`insert settings api api error ${error}`);
+        })
+
+      } catch (error) {
+        reject(`insert settings api try catch error`);
+        console.log(`insert settings api try catch error`);
+      }
+    });
+    
+  }
+  const loadSettings = () => {
+    db.transaction(
+      tx => {
+        tx.executeSql('select * from settings_tbl',[],
+          (_, { rows: { _array } }) => {
+            console.log('settings length '+ _array.length);
+            tableStatusStorage = { ...tableStatusStorage, settings: true};
+          }
+        );
+      },
+      (_t, _error) => { console.log("db error load settings") },
+      (_t, _success) => { console.log("db load settings"); }
+    );
+  }
+
+  
   const uploadUsers = () => {
 
     return new Promise((resolve, reject) => {
@@ -859,135 +1045,147 @@ export default function Install(props) {
 
       console.log(tableStatusStorage);
 
-      if (tableStatusStorage.users == false && tableStatusStorage.menus == false && tableStatusStorage.submenus == false && tableStatusStorage.addons == false && tableStatusStorage.submenu_addons == false) {
+      if (tableStatusStorage.settings == false && tableStatusStorage.users == false && tableStatusStorage.menus == false && tableStatusStorage.submenus == false && tableStatusStorage.addons == false && tableStatusStorage.submenu_addons == false) {
 
         setInstallLoader(true);
 
-        // upload users in offline database //
-        uploadUsers().then( async (users_message) => {
+        uploadSettings().then( async (settings_message) => {
           
           await sleep(1000);
-          console.log(`${users_message}`);
-          await loadUsers();
+          console.log(`${settings_message}`);
+          await loadSettings();
           await sleep(2000);
           console.log(tableStatusStorage);
 
-
-          // upload menus in offline database //
-          uploadMenus().then( async (menus_message) => {
-
+          // upload users in offline database //
+          uploadUsers().then( async (users_message) => {
+            
             await sleep(1000);
-            console.log(menus_message);
-            await loadMenus();
+            console.log(`${users_message}`);
+            await loadUsers();
             await sleep(2000);
             console.log(tableStatusStorage);
 
 
-            // upload submenus in offline database //
-            uploadSubmenus().then( async (submenus_message) => {
+            // upload menus in offline database //
+            uploadMenus().then( async (menus_message) => {
 
               await sleep(1000);
-              console.log(submenus_message);
-              await loadSubmenus();
+              console.log(menus_message);
+              await loadMenus();
               await sleep(2000);
               console.log(tableStatusStorage);
 
 
-              // upload groups in offline database //
-              uploadGroups().then( async (groups_message) => {
+              // upload submenus in offline database //
+              uploadSubmenus().then( async (submenus_message) => {
 
                 await sleep(1000);
-                console.log(groups_message);
-                await loadGroups();
+                console.log(submenus_message);
+                await loadSubmenus();
                 await sleep(2000);
                 console.log(tableStatusStorage);
 
 
-                // upload addons in offline database //
-                uploadAddons().then( async (addons_message) => {
+                // upload groups in offline database //
+                uploadGroups().then( async (groups_message) => {
 
                   await sleep(1000);
-                  console.log(addons_message);
-                  await loadAddons();
+                  console.log(groups_message);
+                  await loadGroups();
                   await sleep(2000);
                   console.log(tableStatusStorage);
 
 
-                  // upload submenu addons in offline database //
-                  uploadSubmenuAddons().then( async (submenu_addons_message) => {
+                  // upload addons in offline database //
+                  uploadAddons().then( async (addons_message) => {
 
                     await sleep(1000);
-                    console.log(submenu_addons_message);
-                    await loadSubmenuAddons();
+                    console.log(addons_message);
+                    await loadAddons();
                     await sleep(2000);
                     console.log(tableStatusStorage);
-                    
-
-                      // upload menu submenu timings in offline database //
-                      uploadMenuSubmenuTimings().then( async (menu_submenu_timings_message) => {
-
-                        await sleep(1000);
-                        console.log(menu_submenu_timings_message);
-                        await loadMenuSubmenuTimings();
-                        await sleep(2000);
-                        console.log(tableStatusStorage);
 
 
-                        // upload menu submenu timing slots in offline database //
-                        uploadMenuSubmenuTimingSlots().then( async (menu_submenu_timingslots_message) => {
+                    // upload submenu addons in offline database //
+                    uploadSubmenuAddons().then( async (submenu_addons_message) => {
+
+                      await sleep(1000);
+                      console.log(submenu_addons_message);
+                      await loadSubmenuAddons();
+                      await sleep(2000);
+                      console.log(tableStatusStorage);
+                      
+
+                        // upload menu submenu timings in offline database //
+                        uploadMenuSubmenuTimings().then( async (menu_submenu_timings_message) => {
 
                           await sleep(1000);
-                          console.log(menu_submenu_timingslots_message);
-                          await loadMenuSubmenuTimingSlots();
+                          console.log(menu_submenu_timings_message);
+                          await loadMenuSubmenuTimings();
                           await sleep(2000);
                           console.log(tableStatusStorage);
 
 
-                          let stringValue = JSON.stringify(tableStatusStorage);
-                          AsyncStorage.setItem('tables-status', stringValue);
-                          console.log('all tables has upload');
+                          // upload menu submenu timing slots in offline database //
+                          uploadMenuSubmenuTimingSlots().then( async (menu_submenu_timingslots_message) => {
 
-                          AsyncStorage.setItem('install', 'second');
-                          dispatch(changeInstallStatus('second'));
-                          console.log('set second value');
+                            await sleep(1000);
+                            console.log(menu_submenu_timingslots_message);
+                            await loadMenuSubmenuTimingSlots();
+                            await sleep(2000);
+                            console.log(tableStatusStorage);
 
-                          setInstallLoader(false);
 
+                            let stringValue = JSON.stringify(tableStatusStorage);
+                            AsyncStorage.setItem('tables-status', stringValue);
+                            console.log('all tables has upload');
+
+                            AsyncStorage.setItem('install', 'second');
+                            dispatch(changeInstallStatus('second'));
+                            console.log('set second value');
+
+                            setInstallLoader(false);
+
+
+                          }).catch( (menu_submenu_timingslots_message) =>{
+                            rejectInstallation(menu_submenu_timingslots_message);
+                          });
 
                         }).catch( (menu_submenu_timingslots_message) =>{
                           rejectInstallation(menu_submenu_timingslots_message);
                         });
 
-                      }).catch( (menu_submenu_timingslots_message) =>{
-                        rejectInstallation(menu_submenu_timingslots_message);
-                      });
 
-
-                  }).catch( (submenu_addons_message) =>{
-                    rejectInstallation(submenu_addons_message);
+                    }).catch( (submenu_addons_message) =>{
+                      rejectInstallation(submenu_addons_message);
+                    });
+                    
+                  }).catch( (addons_message) =>{
+                    rejectInstallation(addons_message);
                   });
                   
-                }).catch( (addons_message) =>{
-                  rejectInstallation(addons_message);
+                }).catch( (groups_message) =>{
+                  rejectInstallation(groups_message);
                 });
                 
-              }).catch( (groups_message) =>{
-                rejectInstallation(groups_message);
+              }).catch( (submenus_message) =>{
+                rejectInstallation(submenus_message);
               });
-              
-            }).catch( (submenus_message) =>{
-              rejectInstallation(submenus_message);
-            });
 
-          }).catch( (menus_message) =>{
-            rejectInstallation(menus_message);
+            }).catch( (menus_message) =>{
+              rejectInstallation(menus_message);
+            });
+            
+          }).catch( (users_message) =>{
+            rejectInstallation(users_message);
           });
-          
-        }).catch( (users_message) =>{
-          rejectInstallation(users_message);
+
+        }).catch( (settings_message) =>{
+          rejectInstallation(settings_message);
         });
 
-      } else if (tableStatusStorage.users == true && tableStatusStorage.menus == true && tableStatusStorage.submenus == true && tableStatusStorage.addons == true && tableStatusStorage.submenu_addons == true) {
+      } else if (tableStatusStorage.settings == true && tableStatusStorage.users == true && tableStatusStorage.menus == true && tableStatusStorage.submenus == true && tableStatusStorage.addons == true && tableStatusStorage.submenu_addons == true) {
         
         AsyncStorage.setItem('install', 'second');
         dispatch(changeInstallStatus('second'));

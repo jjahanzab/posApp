@@ -14,7 +14,7 @@ function Submenu(props) {
 
   const dispatch = useDispatch();
   const { dbSubmenus, dbSubmenuAddonsIds, dbGroupAddonStatus, dbSubmenuGroupAddons } = useSelector(state => state.PosReducer);
-  const { getSubmenuGroupAddonsFun, submenuGroupAddons, setsubmenuGroupAddons, submenuGroupAddonsStatus, setsubmenuGroupAddonsStatus, menuId, setMenuId, basketStatus, setBasketStatus, deliveryType } = useContext(PosContext);
+  const { getSubmenuGroupAddonsFun, submenuGroupAddons, setsubmenuGroupAddons, submenuGroupAddonsStatus, setsubmenuGroupAddonsStatus, menuId, setMenuId, basketStatus, setBasketStatus, deliveryType, changeSpecialCharFun } = useContext(PosContext);
   const [ selectedSubmenu, setSelectedSubmenu ] = useState([]);
   
   const [ loader, setLoader ] = useState(false);
@@ -261,7 +261,7 @@ function Submenu(props) {
         return (
           <Pressable key={index} style={[SubmenuStyle.col_3, SubmenuStyle.submenusBox]} onPress={() => handleSubmenuData(submenu)}>
             <Text style={SubmenuStyle.submenuText}>
-              { submenu.id }-{ submenu.name }
+              { submenu.id }-{ changeSpecialCharFun(submenu.name) }
             </Text>
           </Pressable>
         )
@@ -272,7 +272,7 @@ function Submenu(props) {
         return (
           <Pressable key={index} style={[SubmenuStyle.col_3, SubmenuStyle.submenusBox]} onPress={() => handleSubmenuData(submenu)}>
             <Text style={SubmenuStyle.submenuText}>
-              { submenu.id }-{ submenu.name }
+              { submenu.id }-{ changeSpecialCharFun(submenu.name) }
             </Text>
           </Pressable>
         )
@@ -306,7 +306,7 @@ function Submenu(props) {
                       {lists ? lists.map((group, index) => {
                         return (
                           <View key={index} style={AddonStyle.groupBox}>
-                            <Text variant="titleMedium">{group.name}</Text>
+                            <Text variant="titleMedium">{changeSpecialCharFun(group.name)}</Text>
                             <Divider />
                             <View style={AddonStyle.row}>
                               { group.addons ? group.addons.map((item, ind) => {
@@ -314,11 +314,11 @@ function Submenu(props) {
                                   <View key={ind} style={AddonStyle.col_3}>
                                     { item.status && item.status == "active"  ?
                                         <Pressable style={AddonStyle.AddonBtnActive} onPress={() => { handleAddonActive(item) }}>
-                                          <Text style={AddonStyle.AddonBtnTextActive}>{item.name} (£{twoDecimal(item.price)})</Text>
+                                          <Text style={AddonStyle.AddonBtnTextActive}>{changeSpecialCharFun(item.name)} (£{twoDecimal(item.price)})</Text>
                                         </Pressable>
                                       :
                                         <Pressable style={AddonStyle.AddonBtn} onPress={() => { handleAddonActive(item) }}>
-                                          <Text style={AddonStyle.AddonBtnText}>{item.name} (£{twoDecimal(item.price)})</Text>
+                                          <Text style={AddonStyle.AddonBtnText}>{changeSpecialCharFun(item.name)} (£{twoDecimal(item.price)})</Text>
                                         </Pressable>
                                     }
                                   </View>

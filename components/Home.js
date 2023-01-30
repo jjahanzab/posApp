@@ -11,7 +11,7 @@ import Install from './Install';
 import Start from './Start';
 import Main from './Main';
 import Login from './pos/Login';
-import PosLayout from './pos/PosLayout';
+import PosContainer from './pos/PosContainer';
 import { changeInstallStatus } from '../redux/actions/UserAction';
 import { getDbUsers, changeAuthStatus } from '../redux/actions/PosAction';
 
@@ -24,15 +24,6 @@ const Home = (props) => {
   const dispatch = useDispatch();
 
   const [ loader, setLoader ] = useState(false);
-
-  useEffect(()=>{
-    if (install == '') {
-      setLoader(true);
-    }
-    if (install) {
-      setLoader(false);
-    }
-  },[])
 
 
   // set values in storage & redux-state //
@@ -137,8 +128,8 @@ const Home = (props) => {
           } else if (authStatus == true) {
             return (
               <>
-                <Stack.Navigator initialRouteName='PosLayout'>
-                  <Stack.Screen name="PosLayout" component={PosLayout} options={{ title: 'PosLayout', headerShown: false, orientation: 'all' }} />
+                <Stack.Navigator initialRouteName='PosContainer'>
+                  <Stack.Screen name="PosContainer" component={PosContainer} options={{ title: 'PosContainer', headerShown: false, orientation: 'all' }} />
                 </Stack.Navigator>
               </>
             )

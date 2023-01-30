@@ -6,6 +6,7 @@ https://www.sqlitetutorial.net/
 
 SQLite Database Tables
 -----------------------------------
+
 1. users_tbl
 => id, name, email unique, password, online_user, role
 
@@ -29,3 +30,60 @@ SQLite Database Tables
 
 8. menu_submenu_timingslots_tbl
 => id, menu_id, submenu_id, day, delivery_start, delivery_end, collection_start, collection_end, pos_status
+
+9. settings_tbl
+=> id, 
+shop_name, 
+contact, 
+shop_number, 
+return_url, 
+street, 
+city, 
+postcode, 
+latitude, 
+longitude, 
+radius, 
+test_number, 
+order_value_delivery, 
+order_value_collection, 
+service_charges_collection_cash, 
+service_charges_discount_collection_cash, 
+service_charges_collection_card, 
+service_charges_discount_collection_card, 
+service_charges_delivery_cash, 
+service_charges_discount_delivery_cash, 
+service_charges_delivery_card, 
+service_charges_discount_delivery_card, 
+delivery_method, 
+delivery_charges, 
+delivery_charges_default, 
+shop_website, 
+shop_description, 
+table_unreserve_message, 
+test_mode, 
+card_on_collection, 
+card_on_delivery, 
+cash_on_collection, 
+cash_on_delivery, 
+preorder_status, 
+status, 
+website_status, 
+deactive_message, 
+website_deactive_message, 
+customer_titles, 
+delivery_discount_type, 
+collection_discount_type, 
+delivery_discount, 
+collection_discount, 
+delivery_discount_threshold, 
+collection_discount_threshold, 
+sale_receipt, 
+sale_receipt_no, 
+kitchen_receipt, 
+kitchen_receipt_no, 
+sale_kitchen_receipt, 
+sale_kitchen_receipt_no, 
+block_unverifyaddress_googleapi, 
+auto_beep, 
+notify, 
+general_meta_tags

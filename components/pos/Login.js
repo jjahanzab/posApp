@@ -51,6 +51,9 @@ const Login = ({ navigation }) => {
         if (user.email == email && user.password == password) {
           validEmail = true;
           validPassword = true;
+          
+          let userStringValue = JSON.stringify(user);
+          AsyncStorage.setItem('auth-user', userStringValue);
 
         } else if (user.email == email && user.password !== password) {
           validEmail = false;

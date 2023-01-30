@@ -1,6 +1,7 @@
 import axios from "axios";
 import { db } from "../../Models/Database";
 
+export const GET_DB_SETTINGS = 'GET_DB_SETTINGS';
 export const GET_DB_USERS = 'GET_DB_USERS';
 export const GET_DB_MENUS = 'GET_DB_MENUS';
 export const GET_DB_SUBMENUS = 'GET_DB_SUBMENUS';
@@ -26,6 +27,36 @@ let hourMin = d.getHours()+":"+d.getMinutes();
 // hourMin = '10:00';
 
 // get db tables data //
+
+export const getDbSettings = () => {
+  return dispatch => {
+    try {
+      db.transaction(
+        tx => {
+          tx.executeSql('select * from settings_tbl',[],
+            (_, { rows: { _array } }) => {
+              if (_array.length > 0) {
+                dispatch({
+                  type: GET_DB_SETTINGS,
+                  payload: _array
+                })
+              }
+            }
+          );
+        },
+        (_t, _error) => { 
+          console.log("db error load settings");
+        },
+        (_t, _success) => { 
+          console.log("db load settings");
+        }
+      );
+    } catch (error) {
+      console.log('getDbSettings action catch error');
+    }
+  }
+}
+
 export const getDbUsers = () => {
   return dispatch => {
     try {

@@ -5,25 +5,28 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from "react-redux";
 import { DbModel } from '../Models/DbModel';
 import { getDbTables, changeInstallStatus } from '../redux/actions/UserAction';
-import { getDbUsers, getDbMenus, getDbSubmenus, getDbGroups, getDbAddons, getDbSubmenuAddons, getDbMenuSubmenuTimings, getDbMenuSubmenuTimingSlots } from '../redux/actions/PosAction';
+import { getDbSettings, getDbUsers, getDbMenus, getDbSubmenus, getDbGroups, getDbAddons, getDbSubmenuAddons, getDbMenuSubmenuTimings, getDbMenuSubmenuTimingSlots, getDbSubmenusById } from '../redux/actions/PosAction';
+import { PosContext } from '../context/PosContext';
 
 import Loader from './Loader';
 
 const Start = (props) => {
 
+  const dispatch = useDispatch();
+
   const [ loader, setLoader ] = useState(false);
   let resetTableStatusStorage =  { users:false, menus:false, submenus:false, groups: false, addons:false, submenu_addons:false };
 
   const { dbTables, install } = useSelector(state => state.UserReducer);
-  const { dbUsers, dbMenus, dbSubmenus, dbGroups, dbAddons, dbSubmenuAddons, dbMenuSubmenuTimings, dbMenuSubmenuTimingSlots } = useSelector(state => state.PosReducer);
-
-  const dispatch = useDispatch();
+  const { dbSettings, dbUsers, dbMenus, dbSubmenus, dbGroups, dbAddons, dbSubmenuAddons, dbMenuSubmenuTimings, dbMenuSubmenuTimingSlots } = useSelector(state => state.PosReducer);
+  const { posLoader, setPosLoader, menuId, setMenuId } = useContext(PosContext);
 
 
   useEffect(()=>{
     setLoader(true);
 
     dispatch(getDbTables());
+    dispatch(getDbSettings());
     dispatch(getDbUsers());
     dispatch(getDbMenus());
     dispatch(getDbSubmenus());
@@ -59,11 +62,17 @@ const Start = (props) => {
   },[]);
 
 
-  const letsStart = async () => {
-    setLoader(true);
+  useEffect(()=>{
+    if (dbSettings.length > 0) {
+      let resetStringValue = JSON.stringify(dbSettings[0]);
+      AsyncStorage.setItem('general-settings', resetStringValue);
+    }
+  },[dbSettings]);
 
-    // 2 because 1 table is created by default in sqlite
-    if (dbTables.length < 2 && dbUsers.length < 1 && dbMenus.length < 1 && dbSubmenus.length < 1 && dbGroups.length < 1 && dbAddons.length < 1 && dbSubmenuAddons.length < 1) {
+
+  const letsStart = async () => {
+    // dbTables.length < 2 because 1 table is created by default in sqlite
+    if (dbTables.length < 2 && dbSettings.length < 1 && dbUsers.length < 1 && dbMenus.length < 1 && dbSubmenus.length < 1 && dbGroups.length < 1 && dbAddons.length < 1 && dbSubmenuAddons.length < 1) {
       
       let resetStringValue = JSON.stringify(resetTableStatusStorage);
       AsyncStorage.setItem('tables-status', resetStringValue);
@@ -97,7 +106,6 @@ const Start = (props) => {
     // DbModel.dropTable('players');
     // await Updates.reloadAsync();
 
-    setLoader(false);
   }
 
 
@@ -113,6 +121,8 @@ const Start = (props) => {
           <Button title={`Let's Start App`} onPress={() => letsStart()} buttonColor={"#2196F3"} style={{marginTop:50, marginBottom:50}} />
           <Text></Text>
           <Text>{`dbTables: ${dbTables.length > 0 ? dbTables.length : ''}`}</Text>
+          <Text></Text>
+          <Text>{`dbSettings: ${dbSettings.length > 0 ? dbSettings.length : ''}`}</Text>
           <Text></Text>
           <Text>{`dbUsers: ${dbUsers.length > 0 ? dbUsers.length : ''}`}</Text>
           <Text></Text>
